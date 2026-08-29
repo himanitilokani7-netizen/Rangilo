@@ -1,0 +1,999 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RANGILO ✦ Garba Nights — Navratri Jukebox & Suggestion Box</title>
+<meta name="description" content="A festive garba jukebox for Navratri — stream the ultimate garba playlist, watch the dancers whirl in traditional chaniya-choli & kediyu, and drop your favourite YouTube songs into the suggestion box.">
+<meta name="theme-color" content="#150309">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;700&family=Kalam:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&family=Shrikhand&family=Yatra+One&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: { fontFamily: {
+  display: ['"Yatra One"', 'cursive'],
+  guj: ['Shrikhand', '"Baloo Bhai 2"', 'cursive'],
+  hand: ['Kalam', 'cursive'],
+  body: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+}}}}
+</script>
+<style>
+  :root{ --a1:#ff2e88; --a2:#ff6b35; --a3:#ffd166; --ink:#150309; }
+  html{scroll-behavior:smooth;}
+  body{ background: radial-gradient(1200px 600px at 80% -10%, rgba(255,46,136,.14), transparent 60%), radial-gradient(900px 500px at -10% 30%, rgba(255,107,53,.10), transparent 60%), radial-gradient(700px 700px at 50% 110%, rgba(255,209,102,.08), transparent 60%), var(--ink); overflow-x:hidden; }
+  ::selection{background:var(--a1);color:#fff;}
+  ::-webkit-scrollbar{width:10px;} ::-webkit-scrollbar-track{background:#0d0206;}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(var(--a1),var(--a2));border-radius:99px;}
+  section[id]{scroll-margin-top:84px;}
+
+  .grad-text{background:linear-gradient(92deg,var(--a1),var(--a2) 55%,var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .stroke-text{color:transparent;-webkit-text-stroke:2px var(--a3);}
+  @supports not (-webkit-text-stroke: 1px black){.stroke-text{color:var(--a3);}}
+
+  .btn-primary{ background:linear-gradient(92deg,var(--a1),var(--a2)); box-shadow:0 12px 34px -10px var(--a1); transition:transform .25s ease, box-shadow .25s ease, filter .25s ease; }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 44px -10px var(--a1);filter:brightness(1.08);}
+  .btn-ghost{border:1px solid rgba(255,255,255,.16);transition:all .25s ease;}
+  .btn-ghost:hover{border-color:var(--a3);color:var(--a3);transform:translateY(-3px);}
+
+  /* ---- mandala ---- */
+  .mandala path,.mandala circle,.mandala line{stroke:var(--a3);fill:none;}
+  .mandala .fillp{fill:var(--a3);fill-opacity:.14;stroke:none;}
+  .m-rot{animation:spin 90s linear infinite;}
+  .m-rot-rev{animation:spin 60s linear infinite reverse;}
+  body.is-playing .mandala{animation-duration:26s;}
+  .mandala{animation:spin 120s linear infinite;transform-origin:center;transform-box:fill-box;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---- marquee ribbons ---- */
+  .mq{overflow:hidden;width:110%;margin-left:-5%;}
+  .mq-track{display:flex;align-items:center;gap:2.2rem;width:max-content;animation:mq 34s linear infinite;}
+  .mq-track.rev{animation:mq 46s linear infinite reverse;}
+  @keyframes mq{to{transform:translateX(-50%);}}
+  .ribbon-a{background:linear-gradient(92deg,var(--a1),var(--a2),var(--a3));color:#1b0311;transform:rotate(-1.6deg);}
+  .ribbon-b{background:rgba(27,3,17,.92);border-top:1px solid rgba(255,209,102,.25);border-bottom:1px solid rgba(255,209,102,.25);color:rgba(255,255,255,.55);transform:rotate(1.2deg);}
+
+  /* ---- equalizer ---- */
+  .eq{display:flex;align-items:flex-end;justify-content:center;gap:4px;height:26px;}
+  .eq span{width:4px;height:100%;border-radius:99px;background:linear-gradient(to top,var(--a1),var(--a3));transform-origin:bottom;animation:eqb var(--d) ease-in-out infinite;animation-play-state:paused;}
+  body.is-playing .eq span{animation-play-state:running;}
+  @keyframes eqb{0%,100%{transform:scaleY(.15);}50%{transform:scaleY(1);}}
+
+  /* ---- player frame ---- */
+  .frame{border:1px solid rgba(255,209,102,.35);border-radius:1.4rem;padding:.7rem; background:linear-gradient(160deg,rgba(255,209,102,.10),rgba(255,46,136,.07)); box-shadow:0 30px 90px -25px var(--a1);}
+  .corner{position:absolute;width:24px;height:24px;border-color:var(--a3);z-index:3;}
+
+  /* ---- reveal ---- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- inputs ---- */
+  .field{ width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12); border-radius:.9rem;padding:.85rem 1rem;color:#fff;outline:none;transition:all .25s ease; }
+  .field:focus{border-color:var(--a3);box-shadow:0 0 0 4px rgba(255,209,102,.12);background:rgba(255,255,255,.08);}
+  .field::placeholder{color:rgba(255,255,255,.35);}
+  .shake{animation:shake .45s ease;}
+  @keyframes shake{20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+
+  /* ---- suggestion cards ---- */
+  .sug-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:1.1rem;overflow:hidden;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;}
+  .sug-card:hover{transform:translateY(-6px);border-color:rgba(255,209,102,.45);box-shadow:0 20px 50px -20px var(--a1);}
+  .sug-card.pulse{animation:pulseC .9s ease;}
+  @keyframes pulseC{0%{box-shadow:0 0 0 0 var(--a1);}70%{box-shadow:0 0 0 16px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+  .heart.pop{animation:heartP .4s cubic-bezier(.22,1.6,.36,1);}
+  @keyframes heartP{50%{transform:scale(1.5);}}
+
+  /* ---- rang chips ---- */
+  .rang-chip{width:34px;height:34px;border-radius:99px;border:2px solid rgba(255,255,255,.15);transition:transform .2s ease,border-color .2s ease;}
+  .rang-chip:hover{transform:scale(1.2) rotate(8deg);}
+  .rang-chip.active{border-color:#fff;transform:scale(1.25);box-shadow:0 0 0 4px rgba(255,255,255,.15);}
+
+  /* ---- toast ---- */
+  .toast{animation:toastIn .4s cubic-bezier(.22,1,.36,1);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(20px) scale(.95);}}
+  .toast.out{opacity:0;transform:translateY(10px);transition:all .4s ease;}
+
+  /* ---- hero fx ---- */
+  .ltr{display:inline-block;animation:pop .7s cubic-bezier(.22,1.4,.36,1) both;}
+  @keyframes pop{from{opacity:0;transform:translateY(40px) scale(.6);}}
+  .float-note{position:absolute;animation:floatN 7s ease-in-out infinite;opacity:.55;user-select:none;filter:drop-shadow(0 0 12px rgba(255,166,77,.5));}
+  @keyframes floatN{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-24px) rotate(8deg);}}
+  .flame{animation:flick .9s ease-in-out infinite alternate;transform-origin:bottom center;display:inline-block;}
+  @keyframes flick{from{transform:scaleY(1) scaleX(1);}to{transform:scaleY(1.25) scaleX(.9);}}
+  .divider-dash{height:1px;background:linear-gradient(90deg,transparent,rgba(255,209,102,.5),transparent);}
+
+  /* ================= DANCERS ================= */
+  .dancer{position:relative;width:calc(clamp(56px,8.5vw,104px) * var(--s,1));flex:none;
+    animation:dSway 1.9s ease-in-out infinite;animation-delay:var(--d,0s);}
+  .dancer::after{content:'';position:absolute;left:10%;right:10%;bottom:-4px;height:10px;border-radius:50%;
+    background:radial-gradient(closest-side, var(--a1), transparent 70%);opacity:.4;filter:blur(2px);}
+  .dsvg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 12px 10px rgba(0,0,0,.35));
+    animation:dBob .95s ease-in-out infinite;animation-delay:var(--d,0s);}
+  @keyframes dSway{0%,100%{transform:translateX(-9px) rotate(-4deg);}50%{transform:translateX(9px) rotate(4deg);}}
+  @keyframes dBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .arm,.d-skirt,.d-head,.d-dupatta,.d-kediyu,.lg,.ft{transform-box:view-box;}
+  .armL{transform-origin:46px 58px;animation:armA 1.9s ease-in-out infinite;animation-delay:var(--d,0s);}
+  .armR{transform-origin:74px 58px;animation:armB 1.9s ease-in-out infinite;animation-delay:var(--d,0s);}
+  @keyframes armA{0%,100%{transform:rotate(14deg);}50%{transform:rotate(54deg);}}
+  @keyframes armB{0%,100%{transform:rotate(-14deg);}50%{transform:rotate(-54deg);}}
+  .d-skirt{transform-origin:60px 92px;animation:skirtS 1.9s ease-in-out infinite;animation-delay:var(--d,0s);}
+  .d-kediyu{transform-origin:60px 56px;animation:skirtS 1.9s ease-in-out infinite;animation-delay:var(--d,0s);}
+  .d-dupatta{transform-origin:60px 26px;animation:skirtS 1.9s ease-in-out infinite reverse;animation-delay:var(--d,0s);}
+  @keyframes skirtS{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+  .ft1,.lg1{animation:stepA .95s ease-in-out infinite;animation-delay:var(--d,0s);}
+  .ft2,.lg2{animation:stepA .95s ease-in-out infinite reverse;animation-delay:var(--d,0s);}
+  .ft{transform-origin:center;}
+  .lg1{transform-origin:54px 114px;} .lg2{transform-origin:66px 114px;}
+  @keyframes stepA{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+  body.is-playing .dancer{animation-duration:1.05s;}
+
+  .spark{opacity:0;transform-box:fill-box;transform-origin:center;}
+  .gfig{perspective:700px;}
+
+  /* variants */
+  .v-clap .armL{animation:clapL .9s ease-in-out infinite;}
+  .v-clap .armR{animation:clapR .9s ease-in-out infinite;}
+  @keyframes clapL{0%,100%{transform:rotate(28deg);}42%,62%{transform:rotate(100deg);}}
+  @keyframes clapR{0%,100%{transform:rotate(-28deg);}42%,62%{transform:rotate(-100deg);}}
+  .v-clap .spark,.v-dandiya .spark{animation:sparkB .9s ease-in-out infinite;}
+  @keyframes sparkB{0%,38%,100%{opacity:0;transform:scale(.2);}48%,64%{opacity:1;transform:scale(1.2);}}
+
+  .v-spin .dsvg{animation:spinY 3s cubic-bezier(.5,0,.3,1) infinite;}
+  @keyframes spinY{0%,22%{transform:rotateY(0);}78%,100%{transform:rotateY(720deg);}}
+  .v-spin .armL{animation:none;transform:rotate(64deg);}
+  .v-spin .armR{animation:none;transform:rotate(-64deg);}
+  .v-spin .d-skirt{animation:flareS 3s ease-in-out infinite;}
+  @keyframes flareS{0%,20%{transform:scale(1,1);}50%{transform:scale(1.3,1);}80%,100%{transform:scale(1,1);}}
+
+  .gcard .v-dodh :is(.dancer,.dsvg,.armL,.armR,.d-skirt,.d-kediyu,.d-dupatta,.ft1,.ft2,.lg1,.lg2){animation-duration:.5s !important;}
+  .v-dandiya .dancer:last-child :is(.armL,.armR,.spark){animation-delay:.45s;}
+
+  .gfig .dancer{width:clamp(62px,9vw,92px);}
+
+  .icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);transition:all .25s ease;color:#fff;}
+  .icon-btn:hover{border-color:var(--a3);color:var(--a3);transform:translateY(-2px);background:rgba(255,209,102,.08);}
+  .icon-btn.main{background:linear-gradient(92deg,var(--a1),var(--a2));border:none;box-shadow:0 10px 26px -8px var(--a1);width:52px;height:52px;}
+  .icon-btn.main:hover{filter:brightness(1.1);color:#fff;}
+
+  #bigPlay{transition:opacity .35s ease, transform .35s ease;}
+  body.is-playing #bigPlay{opacity:0;pointer-events:none;transform:scale(1.3);}
+  #videoShell{transition:box-shadow .4s ease;}
+  #videoShell.pulse{animation:pulseC 1s ease 2;}
+
+  .np-scroll{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body class="font-body text-white/90 antialiased relative">
+
+<!-- scroll progress -->
+<div id="pbar" class="fixed top-0 left-0 h-[3px] z-[60] rounded-r-full" style="background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));width:0%"></div>
+
+<!-- cursor glow -->
+<div id="cursorGlow" class="fixed w-64 h-64 rounded-full pointer-events-none hidden lg:block" style="z-index:1;left:0;top:0;background:radial-gradient(circle,rgba(255,46,136,.14),transparent 65%);transform:translate(-50%,-50%);mix-blend-mode:screen;"></div>
+
+<!-- ambient particle canvas -->
+<canvas id="fx" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index:1;"></canvas>
+
+<!-- ============ HEADER ============ -->
+<header id="hdr" class="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-[#150309]/70 border-b border-white/5 transition-all">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5 group">
+      <span class="text-2xl group-hover:rotate-12 transition-transform">🪘</span>
+      <span class="font-display text-2xl grad-text tracking-wide">RANGILO</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-white/70">
+      <a href="#playlist" class="hover:text-[color:var(--a3)] transition-colors">Jukebox</a>
+      <a href="#moves" class="hover:text-[color:var(--a3)] transition-colors">Garba 101</a>
+      <a href="#suggest" class="hover:text-[color:var(--a3)] transition-colors">Suggest</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="#suggest" class="btn-primary hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white">
+        ✦ Suggest a Song
+      </a>
+      <button id="menuBtn" aria-label="Menu" class="md:hidden w-10 h-10 grid place-items-center rounded-lg border border-white/10 text-xl">☰</button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden px-5 pb-4">
+    <a href="#playlist" class="block py-2.5 text-white/80 border-b border-white/5">🎧 Jukebox</a>
+    <a href="#moves" class="block py-2.5 text-white/80 border-b border-white/5">💃 Garba 101</a>
+    <a href="#suggest" class="block py-2.5 text-white/80">✦ Suggest a Song</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="top" class="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden pt-24 pb-4" style="z-index:2;">
+  <div id="mandalaHero" class="absolute inset-0 grid place-items-center pointer-events-none opacity-20"></div>
+
+  <div class="hidden lg:block absolute left-6 top-1/2 -translate-y-1/2 rotate-180 tracking-[0.6em] text-xs text-white/25 select-none" style="writing-mode:vertical-rl;">નવરાત્રી · ગરબે · ઘૂમવા</div>
+  <div class="hidden lg:block absolute right-6 top-1/2 -translate-y-1/2 tracking-[0.6em] text-xs text-white/25 select-none" style="writing-mode:vertical-rl;">CHANIYA CHOLI · KEDIYU · DANDIYA</div>
+
+  <!-- floating diyas / notes -->
+  <span class="float-note text-3xl" style="left:8%;top:24%;animation-delay:.2s">🪔</span>
+  <span class="float-note text-2xl" style="right:10%;top:20%;animation-delay:1.4s">🎶</span>
+  <span class="float-note text-2xl" style="left:16%;top:56%;animation-delay:2.2s">✨</span>
+  <span class="float-note text-3xl" style="right:14%;top:52%;animation-delay:.8s">🪘</span>
+  <span class="float-note text-xl" style="left:44%;top:14%;animation-delay:3s">💫</span>
+
+  <div class="relative z-10 text-center px-5 max-w-4xl">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs tracking-[0.25em] text-white/60 mb-6 reveal in">
+      <span class="w-2 h-2 rounded-full animate-pulse" style="background:var(--a1);box-shadow:0 0 10px var(--a1)"></span>
+      NAVRATRI SPECIAL · LIVE GARBA JUKEBOX
+    </div>
+
+    <h1 class="font-guj leading-none grad-text" style="font-size:clamp(4rem,15vw,9.5rem);text-shadow:0 0 80px rgba(255,46,136,.25);">રંગીલો</h1>
+    <h2 id="heroSub" class="font-display stroke-text tracking-[0.18em] mt-2" style="font-size:clamp(1.4rem,5vw,3rem);">GARBA NIGHTS</h2>
+
+    <p class="mt-6 text-white/60 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+      Nine nights, one circle, infinite rang. Press play on the mega garba playlist,
+      watch the dancers whirl in their <span class="text-[color:var(--a3)]">chaniya choli</span> &amp;
+      <span class="text-[color:var(--a3)]">kediyu</span> — and drop your favourite YouTube songs into the suggestion box.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a id="ctaPlay" href="#playlist" class="btn-primary inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white">
+        <span class="text-lg">▶</span> Start the Jukebox
+      </a>
+      <a href="#suggest" class="btn-ghost inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-white/90">
+        ✦ Suggest a Song
+      </a>
+    </div>
+
+    <div class="mt-8 flex items-center justify-center gap-3 text-[11px] tracking-[0.3em] text-white/35">
+      <span>9 NIGHTS</span><span style="color:var(--a3)">✦</span>
+      <span>1 CIRCLE</span><span style="color:var(--a3)">✦</span>
+      <span>∞ RANG</span>
+    </div>
+  </div>
+
+  <!-- dancer stage -->
+  <div class="relative w-full mt-10 sm:mt-14">
+    <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-[130%] max-w-4xl h-24 rounded-[100%] pointer-events-none"
+         style="background:radial-gradient(closest-side, rgba(255,46,136,.18), transparent 75%);"></div>
+    <div id="heroDancers" class="relative z-10 flex items-end justify-center gap-1 sm:gap-3"></div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE RIBBONS ============ -->
+<div class="relative py-10" style="z-index:2;">
+  <div class="mq ribbon-a py-3 shadow-2xl">
+    <div class="mq-track font-display text-lg sm:text-xl whitespace-nowrap" id="mqA"></div>
+  </div>
+  <div class="mq ribbon-b py-2.5 -mt-1">
+    <div class="mq-track rev text-xs sm:text-sm tracking-[0.3em] whitespace-nowrap" id="mqB"></div>
+  </div>
+</div>
+
+<!-- ============ JUKEBOX ============ -->
+<section id="playlist" class="relative max-w-6xl mx-auto px-5 py-16 sm:py-24" style="z-index:2;">
+  <div class="text-center mb-12 reveal">
+    <p class="font-hand text-[color:var(--a3)] text-lg">the dhoom machine</p>
+    <h2 class="font-display text-4xl sm:text-6xl mt-1">THE <span class="grad-text">GARBA</span> JUKEBOX</h2>
+    <div class="divider-dash w-48 mx-auto mt-5"></div>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-8 items-start">
+    <!-- player -->
+    <div class="lg:col-span-2 reveal">
+      <div class="flex items-center justify-between mb-3 px-1">
+        <span class="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] text-white/50">
+          <span class="w-2 h-2 rounded-full animate-pulse" style="background:#ff4d4d;box-shadow:0 0 8px #ff4d4d"></span> GARBA ON AIR
+        </span>
+        <span id="sugPill" class="hidden text-[11px] px-3 py-1 rounded-full border border-[color:var(--a3)]/40 text-[color:var(--a3)]">✦ FROM THE SUGGESTION BOX</span>
+      </div>
+
+      <div class="frame relative">
+        <span class="corner border-l-2 border-t-2 -top-1.5 -left-1.5 rounded-tl-2xl"></span>
+        <span class="corner border-r-2 border-t-2 -top-1.5 -right-1.5 rounded-tr-2xl"></span>
+        <span class="corner border-l-2 border-b-2 -bottom-1.5 -left-1.5 rounded-bl-2xl"></span>
+        <span class="corner border-r-2 border-b-2 -bottom-1.5 -right-1.5 rounded-br-2xl"></span>
+
+        <div id="videoShell" class="relative rounded-[0.9rem] overflow-hidden bg-black aspect-video">
+          <div id="ytFrame" class="absolute inset-0"></div>
+          <button id="bigPlay" class="absolute inset-0 grid place-items-center bg-black/35 group" aria-label="Play">
+            <span class="w-20 h-20 rounded-full grid place-items-center text-3xl text-white btn-primary group-hover:scale-110 transition-transform">▶</span>
+          </button>
+        </div>
+
+        <!-- control bar -->
+        <div id="controlsWrap" class="mt-3 px-2 sm:px-4 py-3 rounded-2xl bg-black/40 border border-white/5 flex items-center gap-3 sm:gap-4 opacity-50 pointer-events-none transition-opacity">
+          <div class="eq hidden sm:flex shrink-0" aria-hidden="true">
+            <span style="--d:.5s"></span><span style="--d:.3s"></span><span style="--d:.7s"></span><span style="--d:.4s"></span><span style="--d:.6s"></span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p id="npTitle" class="np-scroll font-semibold text-sm sm:text-base text-white">Warming up the dhol…</p>
+            <p id="npIndex" class="np-scroll text-[11px] text-white/45 mt-0.5">RANGILO ✦ MEGA GARBA PLAYLIST</p>
+          </div>
+          <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <button id="btnPrev" class="icon-btn" aria-label="Previous" title="Previous">⏮</button>
+            <button id="btnPlay" class="icon-btn main" aria-label="Play / Pause" title="Play / Pause">▶</button>
+            <button id="btnNext" class="icon-btn" aria-label="Next" title="Next">⏭</button>
+            <button id="btnRand" class="icon-btn hidden sm:grid" aria-label="Surprise me" title="Surprise me 🎲">🎲</button>
+            <button id="btnMute" class="icon-btn" aria-label="Mute" title="Mute / Unmute">🔊</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-white/45 px-1">
+        <span>Powered by the <a class="underline hover:text-[color:var(--a3)]" href="https://music.youtube.com/playlist?list=PLDlTzZdSaSVWrt5ONmAWOHHt1NOv-nil3&si=4YpjDrwZszQcFnJQ" target="_blank" rel="noopener">Rangilo Mega Garba playlist ↗</a></span>
+        <div class="flex gap-2">
+          <button id="copyPl" class="btn-ghost px-4 py-1.5 rounded-full text-white/70">📋 Copy playlist</button>
+          <a id="openYTM" href="https://music.youtube.com/playlist?list=PLDlTzZdSaSVWrt5ONmAWOHHt1NOv-nil3&si=4YpjDrwZszQcFnJQ" target="_blank" rel="noopener" class="btn-ghost px-4 py-1.5 rounded-full text-white/70">🎧 Open in YouTube Music</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- side column -->
+    <div class="space-y-6">
+      <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-6 reveal" style="transition-delay:.1s">
+        <p class="font-hand text-[color:var(--a3)] text-lg">tonight's ritual</p>
+        <ol class="mt-4 space-y-4 text-sm text-white/70">
+          <li class="flex gap-3"><span class="font-display text-xl grad-text">1</span><span><b class="text-white">Press play.</b> The dhol takes over from here.</span></li>
+          <li class="flex gap-3"><span class="font-display text-xl grad-text">2</span><span><b class="text-white">Ghumo.</b> Join the circle — taali, feto, dodhiyu.</span></li>
+          <li class="flex gap-3"><span class="font-display text-xl grad-text">3</span><span><b class="text-white">Drop a song.</b> Your YouTube link goes straight to the wall below.</span></li>
+        </ol>
+      </div>
+
+      <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-6 reveal" style="transition-delay:.2s">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl flame">🪔</span>
+          <p class="text-xs tracking-[0.25em] text-white/45">AARTI CORNER</p>
+        </div>
+        <p id="quote" class="font-hand text-lg text-white/80 mt-4 leading-relaxed">“Jai Ambe Maa” — the garba begins with Her name, and the night never really ends.</p>
+        <button id="quoteBtn" class="mt-4 text-xs text-[color:var(--a3)] hover:underline">another bhent ✦</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIBBON 2 ============ -->
+<div class="relative py-8" style="z-index:2;">
+  <div class="mq ribbon-b py-2.5">
+    <div class="mq-track text-xs sm:text-sm tracking-[0.3em] whitespace-nowrap" id="mqC"></div>
+  </div>
+</div>
+
+<!-- ============ GARBA 101 ============ -->
+<section id="moves" class="relative max-w-6xl mx-auto px-5 py-16 sm:py-24" style="z-index:2;">
+  <div class="text-center mb-12 reveal">
+    <p class="font-hand text-[color:var(--a3)] text-lg">learn the moves, wear the rang</p>
+    <h2 class="font-display text-4xl sm:text-6xl mt-1">GARBA <span class="stroke-text">101</span></h2>
+    <p class="text-white/50 text-sm mt-4 max-w-lg mx-auto">Four rhythms every garba ground lives by — our little dancers in traditional dress will show you how.</p>
+    <div class="divider-dash w-48 mx-auto mt-5"></div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="gcard v-clap rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center reveal" style="transition-delay:0s">
+      <div class="gfig flex items-end justify-center h-40" data-d="f" data-pal="0"></div>
+      <h3 class="font-display text-xl mt-2">DO TAALI</h3>
+      <p class="text-xs text-white/55 mt-2 leading-relaxed">Clap twice on the beat, sway with the circle. The first garba step every Gujarati learns.</p>
+    </div>
+    <div class="gcard v-spin rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center reveal" style="transition-delay:.1s">
+      <div class="gfig v-spin flex items-end justify-center h-40" data-d="f" data-pal="1"></div>
+      <h3 class="font-display text-xl mt-2">FETO — THE SPIN</h3>
+      <p class="text-xs text-white/55 mt-2 leading-relaxed">The signature whirl. Whip around on beat four and let the ghaghra fly wide.</p>
+    </div>
+    <div class="gcard rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center reveal" style="transition-delay:.2s">
+      <div class="gfig v-dodh flex items-end justify-center h-40" data-d="m" data-pal="2"></div>
+      <h3 class="font-display text-xl mt-2">DODHIYU</h3>
+      <p class="text-xs text-white/55 mt-2 leading-relaxed">Double-time! When the dhol speeds up, feet move twice as fast — full energy, no mercy.</p>
+    </div>
+    <div class="gcard rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center reveal" style="transition-delay:.3s">
+      <div class="gfig v-dandiya flex items-end justify-center h-40" data-d="ff" data-pal="3"></div>
+      <h3 class="font-display text-xl mt-2">DANDIYA RAAS</h3>
+      <p class="text-xs text-white/55 mt-2 leading-relaxed">Sticks out — click, clash, partner-swap. Garba's playful sibling in matching kediyu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUGGESTION BOX ============ -->
+<section id="suggest" class="relative max-w-6xl mx-auto px-5 py-16 sm:py-24" style="z-index:2;">
+  <div class="text-center mb-12 reveal">
+    <p class="font-hand text-[color:var(--a3)] text-lg">drop it like a dhol drop</p>
+    <h2 class="font-display text-4xl sm:text-6xl mt-1">SUGGESTION <span class="grad-text">BOX</span></h2>
+    <p class="text-white/50 text-sm mt-4 max-w-lg mx-auto">Paste any YouTube link — a Falguni classic, a fresh Dholida banger — and it joins the wall. Hit ▶ on any card to play it right here.</p>
+    <div class="divider-dash w-48 mx-auto mt-5"></div>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-8 items-start">
+    <!-- form -->
+    <form id="sugForm" class="lg:col-span-2 rounded-2xl border border-white/10 p-6 sm:p-7 bg-gradient-to-b from-white/[0.06] to-transparent reveal" novalidate>
+      <label class="block text-xs tracking-[0.2em] text-white/50 mb-2">YOUTUBE LINK *</label>
+      <input id="inLink" type="url" class="field" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off">
+      <p class="text-[11px] text-white/35 mt-2">watch · youtu.be · shorts · music.youtube links — sab chalega ✦</p>
+
+      <label class="block text-xs tracking-[0.2em] text-white/50 mt-5 mb-2">YOUR NAME</label>
+      <input id="inName" type="text" class="field" placeholder="Garba-loving anonymous" maxlength="40">
+
+      <label class="block text-xs tracking-[0.2em] text-white/50 mt-5 mb-2">DEDICATION <span class="text-white/25">(optional)</span></label>
+      <textarea id="inMsg" class="field resize-none" rows="3" placeholder="“For the whole garba circle — full dodhiyu mode!”" maxlength="140"></textarea>
+
+      <button type="submit" id="sugBtn" class="btn-primary w-full mt-6 py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
+        🎶 Add to the wall
+      </button>
+      <p class="text-center text-[11px] text-white/30 mt-3">Saved on this device · played on demand</p>
+    </form>
+
+   
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="relative mt-10 border-t border-white/10 overflow-hidden" style="z-index:2;background:linear-gradient(to bottom, transparent, rgba(255,46,136,.06));">
+  <div id="mandalaFoot" class="absolute inset-0 grid place-items-center opacity-10 pointer-events-none"></div>
+  <div class="relative max-w-6xl mx-auto px-5 py-14 text-center">
+    <p class="font-guj grad-text" style="font-size:clamp(2.2rem,7vw,4.5rem)">શુભ નવરાત્રી</p>
+    <p class="font-hand text-white/50 mt-2">May your taali always land on the beat.</p>
+
+    <div class="flex items-center justify-center gap-3 mt-8">
+      <span class="text-xs tracking-[0.25em] text-white/40 mr-1">PICK YOUR RANG</span>
+      <span id="rangChips" class="flex gap-2.5"></span>
+    </div>
+
+    <div class="divider-dash max-w-xs mx-auto my-8"></div>
+    <p class="text-xs text-white/35">Made with 💗, dhol beats &amp; dhokla · <span class="font-display grad-text">RANGILO</span> · <span id="year"></span></p>
+    <p class="text-[11px] text-white/25 mt-2">All music streams from YouTube · suggestions belong to their senders ✦</p>
+  </div>
+</footer>
+
+<!-- toasts -->
+<div id="toasts" class="fixed bottom-5 inset-x-0 z-[80] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+<!-- confetti canvas -->
+<canvas id="confetti" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index:70;"></canvas>
+
+<script>
+/* ============================================================
+   RANGILO ✦ Garba Nights — all interactivity
+   ============================================================ */
+const $  = q => document.querySelector(q);
+const $$ = q => [...document.querySelectorAll(q)];
+const PLIST_ID = 'PLDlTzZdSaSVWrt5ONmAWOHHt1NOv-nil3';
+const PLIST_URL = 'https://music.youtube.com/playlist?list=' + PLIST_ID;
+
+/* ---------- toast ---------- */
+function toast(msg, icon='✦'){
+  const t = document.createElement('div');
+  t.className = 'toast pointer-events-auto flex items-center gap-2.5 px-5 py-3 rounded-full border border-[color:var(--a3)]/40 bg-[#1c0512]/95 backdrop-blur text-sm text-white shadow-2xl';
+  t.innerHTML = `<span style="color:var(--a3)">${icon}</span><span>${msg}</span>`;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 420); }, 3400);
+}
+
+/* ---------- palettes (rang) ---------- */
+const PALS = {
+  rato:    ['#ff2e88', '#ff6b35', '#ffd166'],
+  kesari:  ['#f97316', '#facc15', '#fb7185'],
+  leela:   ['#22c55e', '#eab308', '#f472b6'],
+  ratrani: ['#a855f7', '#22d3ee', '#f0abfc'],
+};
+let palColors = [...PALS.rato];
+function applyPal(key){
+  const p = PALS[key]; if(!p) return;
+  const r = document.documentElement.style;
+  r.setProperty('--a1', p[0]); r.setProperty('--a2', p[1]); r.setProperty('--a3', p[2]);
+  palColors = [...p];
+  $$('#rangChips .rang-chip').forEach(c => c.classList.toggle('active', c.dataset.pal === key));
+  try{ localStorage.setItem('rangiloPal', key); }catch(e){}
+}
+Object.entries(PALS).forEach(([key, p]) => {
+  const b = document.createElement('button');
+  b.className = 'rang-chip'; b.dataset.pal = key;
+  b.style.background = `linear-gradient(135deg, ${p[0]}, ${p[1]} 55%, ${p[2]})`;
+  b.title = key; b.setAttribute('aria-label', 'Colour theme ' + key);
+  b.onclick = () => { applyPal(key); toast('Rang badalyu! ' + key.toUpperCase() + ' mode 🎨', '🎨'); burstAt(innerWidth/2, innerHeight*0.8, 40); };
+  $('#rangChips').appendChild(b);
+});
+try{ const saved = localStorage.getItem('rangiloPal'); if(saved && PALS[saved]) applyPal(saved); else applyPal('rato'); }catch(e){ applyPal('rato'); }
+
+/* ---------- mandala builder ---------- */
+function mandalaSVG(size){
+  let petals12 = '', petals8 = '', dots = '';
+  for(let i=0;i<12;i++){
+    petals12 += `<path transform="rotate(${i*30} 100 100)" d="M100 26 Q118 56 100 78 Q82 56 100 26" class="fillp"/>`;
+    dots += `<circle cx="100" cy="12" r="2.6" transform="rotate(${i*30} 100 100)"/>`;
+  }
+  for(let i=0;i<8;i++){
+    petals8 += `<path transform="rotate(${i*45} 100 100)" d="M100 58 Q112 76 100 90 Q88 76 100 58"/>`;
+  }
+  return `<svg class="mandala" width="${size}" height="${size}" viewBox="0 0 200 200" aria-hidden="true">
+    <g class="m-rot">${petals12}<circle cx="100" cy="100" r="88" stroke-dasharray="3 9" opacity=".7"/><circle cx="100" cy="100" r="70" opacity=".8"/>${dots}</g>
+    <g class="m-rot-rev">${petals8}<circle cx="100" cy="100" r="48" stroke-dasharray="10 6" opacity=".6"/><circle cx="100" cy="100" r="34"/><circle cx="100" cy="100" r="3"/></g>
+  </svg>`;
+}
+$('#mandalaHero').innerHTML = mandalaSVG(Math.min(innerWidth * 0.85, 720));
+$('#mandalaFoot').innerHTML = mandalaSVG(560);
+
+/* ---------- marquees ---------- */
+const items = ['ગરબે ઘૂમવા','DHOOM MACHAAVE','RANGILO RAAT','DHOLO VAGYO','TAALI THAI','શુભ નવરાત્રી','AME GARBA RAMVA JAIE','FULL DODHIYU'];
+const mk = (arr, sep) => arr.concat(arr).map(t => `<span class="mx-4 my-0 flex items-center gap-8"><span>${t}</span><span aria-hidden="true">${sep}</span></span>`).join('');
+$('#mqA').innerHTML = mk(items, '✦');
+$('#mqB').innerHTML = mk(['CHANIYA CHOLI','KEDIYU','DANDIYA','GHAGHRA','PAGDI','O DHANI','O MARI','DHOOM DHADAKA'], '✦');
+$('#mqC').innerHTML = mk(['SUGGEST A SONG ✦ IT PLAYS HERE','YOUR LINK · YOUR WALL · OUR NIGHT'], '✦');
+
+/* ---------- hero subtitle letters ---------- */
+const sub = $('#heroSub');
+sub.innerHTML = [...'GARBA NIGHTS'].map((c,i)=>`<span class="ltr" style="animation-delay:${.55 + i*.05}s">${c===' '?'&nbsp;':c}</span>`).join('');
+
+/* ============================================================
+   DANCERS (traditional garba dress)
+   ============================================================ */
+const SKINS = ['#f2bd92', '#e6a877', '#d69a63', '#c4884f'];
+const DOTS = [[46,128],[62,122],[78,128],[36,148],[52,144],[68,148],[84,146],[44,166],[60,162],[76,166]];
+
+const femaleSVG = (p, skin) => `
+<svg class="dsvg" viewBox="0 0 120 210" fill="none" aria-hidden="true">
+  <g class="d-dupatta" opacity=".7">
+    <path d="M46 22 C22 50 12 96 18 138" stroke="${p.dup}" stroke-width="7" stroke-linecap="round"/>
+    <path d="M74 22 C98 50 108 96 102 138" stroke="${p.dup}" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <g class="d-skirt">
+    <path d="M60 90 C28 104 10 152 11 178 C30 190 90 190 109 178 C110 152 92 104 60 90 Z" fill="${p.skirt}"/>
+    <path d="M15 162 C36 172 84 172 105 162" stroke="${p.skirt2}" stroke-width="4"/>
+    <path d="M12 176 C34 186 86 186 108 176" stroke="${p.skirt2}" stroke-width="5"/>
+    ${DOTS.map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r="2.2" fill="#ffefb8" opacity=".95"/>`).join('')}
+  </g>
+  <rect x="51" y="86" width="18" height="12" rx="6" fill="${skin}"/>
+  <path d="M45 54 C45 48 75 48 75 54 L73 92 C67 98 53 98 47 92 Z" fill="${p.top}"/>
+  <path d="M52 54 Q60 62 68 54" stroke="${p.skirt2}" stroke-width="2.5"/>
+  <path d="M50 63 Q60 71 70 63" stroke="#ffefb8" stroke-width="2"/>
+  <g class="arm armL">
+    <path d="M46 58 Q30 70 25 90" stroke="${skin}" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="25" cy="90" r="5" fill="${skin}"/>
+    <line x1="25" y1="90" x2="10" y2="107" stroke="#e8b64c" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="10" cy="107" r="3" fill="#fff3cd"/>
+  </g>
+  <g class="arm armR">
+    <path d="M74 58 Q90 70 95 90" stroke="${skin}" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="95" cy="90" r="5" fill="${skin}"/>
+    <line x1="95" y1="90" x2="110" y2="107" stroke="#e8b64c" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="110" cy="107" r="3" fill="#fff3cd"/>
+  </g>
+  <g class="d-head">
+    <circle cx="60" cy="32" r="13" fill="${skin}"/>
+    <path d="M47 32 C46 16 74 16 73 32 C70 24 50 24 47 32 Z" fill="#22120e"/>
+    <circle cx="60" cy="16" r="7" fill="#22120e"/>
+    <circle cx="51" cy="14" r="3.4" fill="${p.flw}"/>
+    <circle cx="69" cy="14" r="3.4" fill="${p.flw}"/>
+    <circle cx="60" cy="8" r="2.6" fill="#ffefb8"/>
+    <path d="M52 34 q3 -3 6 0 M62 34 q3 -3 6 0" stroke="#22120e" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="60" cy="29" r="1.6" fill="#ff2e88"/>
+    <path d="M55 41 q5 4 10 0" stroke="#a3402e" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="47.5" cy="36" r="2" fill="#ffd166"/><circle cx="72.5" cy="36" r="2" fill="#ffd166"/>
+  </g>
+  <g class="feet">
+    <ellipse class="ft ft1" cx="48" cy="196" rx="7" ry="4" fill="${skin}"/>
+    <ellipse class="ft ft2" cx="72" cy="196" rx="7" ry="4" fill="${skin}"/>
+  </g>
+  <path class="spark" d="M60 78 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 Z" fill="#ffd166"/>
+</svg>`;
+
+const maleSVG = (p, skin) => `
+<svg class="dsvg" viewBox="0 0 120 210" fill="none" aria-hidden="true">
+  <g class="legs">
+    <rect class="lg lg1" x="50" y="112" width="9" height="60" rx="4" fill="${p.pant}"/>
+    <rect class="lg lg2" x="61" y="112" width="9" height="60" rx="4" fill="${p.pant}"/>
+  </g>
+  <ellipse class="ft ft1" cx="54" cy="180" rx="8" ry="4.5" fill="${skin}"/>
+  <ellipse class="ft ft2" cx="66" cy="180" rx="8" ry="4.5" fill="${skin}"/>
+  <g class="d-kediyu">
+    <path d="M60 52 C40 54 32 68 24 110 Q60 126 96 110 C88 68 80 54 60 52 Z" fill="${p.kurta}"/>
+    <path d="M46 58 L34 104 M60 60 L60 112 M74 58 L86 104" stroke="rgba(0,0,0,.08)" stroke-width="2"/>
+    <path d="M26 106 Q60 120 94 106" stroke="${p.sash}" stroke-width="5"/>
+    <path d="M42 52 Q60 60 78 52" stroke="${p.sash}" stroke-width="3"/>
+    <path d="M60 54 L60 76" stroke="${p.sash}" stroke-width="2"/>
+    <circle cx="60" cy="66" r="1.6" fill="${p.sash}"/><circle cx="60" cy="73" r="1.6" fill="${p.sash}"/>
+  </g>
+  <g class="arm armL">
+    <path d="M46 56 Q30 68 25 88" stroke="${p.kurta}" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="25" cy="88" r="5" fill="${skin}"/>
+    <line x1="25" y1="88" x2="10" y2="105" stroke="#e8b64c" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="10" cy="105" r="3" fill="#fff3cd"/>
+  </g>
+  <g class="arm armR">
+    <path d="M74 56 Q90 68 95 88" stroke="${p.kurta}" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="95" cy="88" r="5" fill="${skin}"/>
+    <line x1="95" y1="88" x2="110" y2="105" stroke="#e8b64c" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="110" cy="105" r="3" fill="#fff3cd"/>
+  </g>
+  <g class="d-head">
+    <circle cx="60" cy="34" r="12" fill="${skin}"/>
+    <path d="M72 24 Q84 20 88 10" stroke="${p.turban2}" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="88" cy="10" r="2.6" fill="#ffefb8"/>
+    <path d="M48 32 C46 17 74 17 72 32 C72 39 48 39 48 32 Z" fill="${p.turban}"/>
+    <path d="M48 27 Q60 22 72 27" stroke="${p.turban2}" stroke-width="3"/>
+    <path d="M52 36 q3 -3 6 0 M62 36 q3 -3 6 0" stroke="#22120e" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M53 44 Q57 48 60 45 Q63 48 67 44" stroke="#3a2417" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M56 50 q4 3 8 0" stroke="#a3402e" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <path class="spark" d="M60 78 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 Z" fill="#ffd166"/>
+</svg>`;
+
+const DPAL = [
+  {skirt:'#ff4d8d', skirt2:'#ffd166', top:'#7c3aed', dup:'#ffd166', flw:'#ff8fab', kurta:'#fff6e8', pant:'#7c3aed', sash:'#ff4d8d', turban:'#ff4d8d', turban2:'#ffd166'},
+  {skirt:'#22d3ee', skirt2:'#ff6b35', top:'#111827', dup:'#f0abfc', flw:'#ffd166', kurta:'#fff6e8', pant:'#0f766e', sash:'#f59e0b', turban:'#22d3ee', turban2:'#fb7185'},
+  {skirt:'#a3e635', skirt2:'#ec4899', top:'#7c2d12', dup:'#fde68a', flw:'#f472b6', kurta:'#fff6e8', pant:'#b91c1c', sash:'#65a30d', turban:'#facc15', turban2:'#a3e635'},
+  {skirt:'#f97316', skirt2:'#fff',   top:'#065f46', dup:'#bbf7d0', flw:'#fbbf24', kurta:'#fff6e8', pant:'#166534', sash:'#dc2626', turban:'#fb7185', turban2:'#f97316'},
+  {skirt:'#c084fc', skirt2:'#fde047', top:'#312e81', dup:'#a5f3fc', flw:'#f9a8d4', kurta:'#fff6e8', pant:'#4c1d95', sash:'#e879f9', turban:'#c084fc', turban2:'#fde047'},
+  {skirt:'#f43f5e', skirt2:'#fed7aa', top:'#1e293b', dup:'#fecdd3', flw:'#fff',    kurta:'#fff6e8', pant:'#0f172a', sash:'#f43f5e', turban:'#38bdf8', turban2:'#f43f5e'},
+];
+function dancerHTML(type, palIdx, delay, scale){
+  const p = DPAL[palIdx % DPAL.length];
+  const skin = SKINS[(palIdx + 1) % SKINS.length];
+  return `<div class="dancer" style="--d:${delay}s;--s:${scale}">${type === 'm' ? maleSVG(p, skin) : femaleSVG(p, skin)}</div>`;
+}
+/* hero row */
+(() => {
+  const scales = [.8,.9,1,1.08,1,.9,.8];
+  $('#heroDancers').innerHTML = scales.map((s, i) =>
+    dancerHTML(i % 2 ? 'm' : 'f', i % DPAL.length, i * .16, s)
+  ).join('');
+})();
+/* garba 101 figures */
+$$('.gfig').forEach(fig => {
+  const t = fig.dataset.d;
+  if(t === 'ff'){
+    fig.innerHTML = dancerHTML('f', 3, 0, .95) + dancerHTML('f', 4, .3, .95);
+  } else {
+    fig.innerHTML = dancerHTML(t, +fig.dataset.pal || 0, 0, 1);
+  }
+});
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold: .12 });
+$$('.reveal').forEach(el => io.observe(el));
+
+/* ---------- header / progress ---------- */
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  $('#pbar').style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  $('#hdr').classList.toggle('shadow-2xl', h.scrollTop > 40);
+}, { passive:true });
+
+$('#menuBtn').onclick = () => $('#mobileMenu').classList.toggle('hidden');
+$$('#mobileMenu a').forEach(a => a.onclick = () => $('#mobileMenu').classList.add('hidden'));
+$('#year').textContent = new Date().getFullYear();
+
+/* ---------- quotes ---------- */
+const QUOTES = [
+  '“Jai Ambe Maa” — the garba begins with Her name, and the night never really ends.',
+  '“Sanedo sanedo…” — one word from the singer and a thousand feet change step.',
+  'A garba ground is the only place where getting dizzy is the whole point.',
+  'Wear your best chaniya choli. The ghaghra must spin wider than your worries.',
+  'The dhol doesn\u2019t ask permission. It just starts, and somehow everyone knows the beat.',
+];
+$('#quoteBtn').onclick = () => { $('#quote').textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)]; };
+
+/* ============================================================
+   AMBIENT PARTICLES + CONFETTI
+   ============================================================ */
+const fx = $('#fx'), fctx = fx.getContext('2d');
+let P = [];
+function fxResize(){
+  const d = Math.min(devicePixelRatio || 1, 2);
+  fx.width = innerWidth * d; fx.height = innerHeight * d;
+  fx.style.width = innerWidth + 'px'; fx.style.height = innerHeight + 'px';
+  fctx.setTransform(d, 0, 0, d, 0, 0);
+}
+fxResize(); addEventListener('resize', fxResize);
+function newP(fromBottom){
+  return {
+    x: Math.random() * innerWidth,
+    y: fromBottom ? innerHeight + 10 : Math.random() * innerHeight,
+    r: .6 + Math.random() * 1.9,
+    vy: -(.12 + Math.random() * .4),
+    vx: (Math.random() - .5) * .18,
+    ph: Math.random() * Math.PI * 2,
+    c: palColors[Math.floor(Math.random() * palColors.length)],
+  };
+}
+for(let i = 0; i < Math.min(70, innerWidth / 16); i++) P.push(newP(false));
+(function fxLoop(){
+  fctx.clearRect(0, 0, innerWidth, innerHeight);
+  P.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.ph += .03;
+    if(p.y < -12) Object.assign(p, newP(true));
+    fctx.globalAlpha = .18 + Math.abs(Math.sin(p.ph)) * .55;
+    fctx.fillStyle = p.c;
+    fctx.beginPath(); fctx.arc(p.x, p.y, p.r, 0, 7); fctx.fill();
+  });
+  fctx.globalAlpha = 1;
+  requestAnimationFrame(fxLoop);
+})();
+
+const cc = $('#confetti'), cctx = cc.getContext('2d');
+function ccResize(){
+  const d = Math.min(devicePixelRatio || 1, 2);
+  cc.width = innerWidth * d; cc.height = innerHeight * d;
+  cctx.setTransform(d, 0, 0, d, 0, 0);
+}
+ccResize(); addEventListener('resize', ccResize);
+let C = [], ccOn = false;
+function burstAt(x, y, n = 90){
+  for(let i = 0; i < n; i++){
+    C.push({
+      x, y,
+      vx: (Math.random() - .5) * 15,
+      vy: -5 - Math.random() * 9,
+      g: .32,
+      s: 4 + Math.random() * 6,
+      rot: Math.random() * 7, vr: (Math.random() - .5) * .3,
+      c: palColors[Math.floor(Math.random() * palColors.length)],
+      life: 100 + Math.random() * 40,
+      star: Math.random() < .3,
+    });
+  }
+  if(!ccOn){ ccOn = true; ccLoop(); }
+}
+function ccLoop(){
+  cctx.clearRect(0, 0, innerWidth, innerHeight);
+  C = C.filter(p => p.life > 0 && p.y < innerHeight + 30);
+  C.forEach(p => {
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+    cctx.save(); cctx.translate(p.x, p.y); cctx.rotate(p.rot);
+    cctx.globalAlpha = Math.min(1, p.life / 40); cctx.fillStyle = p.c;
+    if(p.star){
+      cctx.fillRect(-p.s/2, -p.s/2, p.s, p.s);
+      cctx.fillRect(-p.s/2, -p.s/6, p.s, p.s/3);
+      cctx.fillRect(-p.s/6, -p.s/2, p.s/3, p.s);
+    } else cctx.fillRect(-p.s/2, -p.s/2, p.s, p.s * .6);
+    cctx.restore();
+  });
+  if(C.length) requestAnimationFrame(ccLoop);
+  else { ccOn = false; cctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+/* ---------- cursor glow ---------- */
+(() => {
+  if(matchMedia('(hover:none)').matches) return;
+  const g = $('#cursorGlow');
+  let tx = innerWidth/2, ty = innerHeight/2, x = tx, y = ty;
+  addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  (function loop(){
+    x += (tx - x) * .12; y += (ty - y) * .12;
+    g.style.transform = `translate(${x - 128}px, ${y - 128}px)`;
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ============================================================
+   YOUTUBE JUKEBOX
+   ============================================================ */
+let yt = null, ytReady = false, playing = false, sugMode = false, muted = false, plLen = 0;
+const tryYt = fn => { try { if(ytReady && yt) fn(); } catch(e){} };
+
+window.onYouTubeIframeAPIReady = function(){
+  yt = new YT.Player('ytFrame', {
+    width: '100%', height: '100%',
+    playerVars: {
+      listType: 'playlist', list: PLIST_ID,
+      controls: 0, disablekb: 1, modestbranding: 1, rel: 0,
+      iv_load_policy: 3, playsinline: 1,
+    },
+    events: {
+      onReady: e => {
+        ytReady = true;
+        try{ e.target.setVolume(85); }catch(_){}
+        $('#controlsWrap').classList.remove('opacity-50', 'pointer-events-none');
+        updNow();
+      },
+      onStateChange: onYTState,
+      onError: () => { toast('That track is unavailable — skipping ⏭', '⚠️'); tryYt(() => yt.nextVideo()); },
+    }
+  });
+};
+(function loadYTApi(){
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+})();
+
+function onYTState(e){
+  const s = e.data;
+  playing = (s === YT.PlayerState.PLAYING);
+  document.body.classList.toggle('is-playing', playing);
+  $('#btnPlay').textContent = playing ? '❚❚' : '▶';
+  if(s === 1 || s === 0) updNow();
+  if(s === 0 && sugMode){
+    sugMode = false; $('#sugPill').classList.add('hidden');
+    tryYt(() => yt.loadPlaylist({ list: PLIST_ID, listType: 'playlist' }));
+    toast('Back to the mega playlist 🎧');
+  }
+}
+function updNow(){
+  try{
+    const d = yt.getVideoData() || {};
+    const pl = yt.getPlaylist() || [];
+    if(pl.length) plLen = pl.length;
+    const idx = yt.getPlaylistIndex();
+    $('#npTitle').textContent = d.title || 'Loading the garba…';
+    $('#npIndex').textContent = (d.author ? d.author + ' · ' : '') +
+      (plLen ? `Track ${Math.max(idx, 0) + 1} / ${plLen} · RANGILO MEGA GARBA` : 'RANGILO ✦ MEGA GARBA PLAYLIST');
+  }catch(_){}
+}
+$('#bigPlay').onclick = () => {
+  if(!ytReady) return toast('The dhol is still tuning up — one second 🪘');
+  yt.playVideo(); updNow();
+};
+$('#btnPlay').onclick = () => {
+  if(!ytReady) return;
+  playing ? yt.pauseVideo() : yt.playVideo();
+};
+$('#btnNext').onclick = () => { sugMode = false; $('#sugPill').classList.add('hidden'); tryYt(() => { yt.nextVideo(); setTimeout(updNow, 300); }); };
+$('#btnPrev').onclick = () => { sugMode = false; $('#sugPill').classList.add('hidden'); tryYt(() => { yt.previousVideo(); setTimeout(updNow, 300); }); };
+$('#btnMute').onclick = () => {
+  if(!ytReady) return;
+  muted = !muted;
+  muted ? yt.mute() : yt.unMute();
+  $('#btnMute').textContent = muted ? '🔇' : '🔊';
+};
+$('#btnRand').onclick = () => {
+  if(!ytReady || !plLen) return toast('Let the playlist load first, then roll the dice 🎲');
+  if(sugMode){ sugMode = false; $('#sugPill').classList.add('hidden'); tryYt(() => yt.loadPlaylist({ list: PLIST_ID, listType: 'playlist' })); return; }
+  const i = Math.floor(Math.random() * plLen);
+  yt.playVideoAt(i);
+  toast('Surprise garba incoming! 🎲');
+};
+$('#ctaPlay').onclick = () => setTimeout(() => { tryYt(() => { yt.playVideo(); updNow(); }); }, 600);
+$('#copyPl').onclick = async () => {
+  try{ await navigator.clipboard.writeText(PLIST_URL); toast('Playlist link copied! Share the rang 📋'); }
+  catch(e){
+    const t = document.createElement('textarea'); t.value = PLIST_URL; document.body.appendChild(t);
+    t.select(); document.execCommand('copy'); t.remove();
+    toast('Playlist link copied! Share the rang 📋');
+  }
+};
+function playVideo(vId, fromSug){
+  if(!ytReady) return toast('The dhol is still tuning up — one second 🪘');
+  if(fromSug){ sugMode = true; $('#sugPill').classList.remove('hidden'); }
+  yt.loadVideoById(vId);
+  $('#videoShell').classList.remove('pulse'); void $('#videoShell').offsetWidth; $('#videoShell').classList.add('pulse');
+  $('#playlist').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ============================================================
+   SUGGESTION BOX
+   ============================================================ */
+const LS_KEY = 'rangiloSugs_v1';
+let sugs = [];
+try{
+  const raw = localStorage.getItem(LS_KEY);
+  sugs = raw ? JSON.parse(raw) : null;
+}catch(e){ sugs = null; }
+if(!sugs){
+  sugs = [{
+    id: 'seed-playlist', kind: 'playlist', vId: null,
+    title: 'RANGILO ✦ The Mega Garba Playlist',
+    by: 'Rangilo Crew',
+    msg: 'Curated dhol-drops, night after night. Press play and ghumav!',
+    ts: Date.now(), hearts: 21,
+  }];
+  saveSugs();
+}
+function saveSugs(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(sugs)); }catch(e){} }
+
+function cardHTML(s){
+  const thumbInner = s.kind === 'playlist'
+    ? `<div class="w-full aspect-video grid place-items-center" style="background:linear-gradient(135deg,var(--a1),var(--a2))">
+         <div class="text-center"><div class="text-4xl">🪘</div><div class="font-display text-white text-sm tracking-[0.3em] mt-1">PLAYLIST</div></div>
+       </div>`
+    : `<img src="https://i.ytimg.com/vi/${s.vId}/hqdefault.jpg" alt="${esc(s.title)}" class="w-full aspect-video object-cover" loading="lazy">`;
+  return `
+  <article class="sug-card" data-id="${s.id}">
+    <div class="relative group">
+      ${thumbInner}
+      <button class="play-fab absolute inset-0 grid place-items-center bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity" aria-label="Play ${esc(s.title)}">
+        <span class="w-14 h-14 rounded-full grid place-items-center text-xl btn-primary text-white">▶</span>
+      </button>
+    </div>
+    <div class="p-4">
+      <h4 class="font-semibold text-white text-sm leading-snug t-title">${esc(s.title)}</h4>
+      <p class="text-[11px] text-white/40 mt-1 t-by">${s.kind === 'playlist' ? 'YouTube Music playlist' : (esc(s.author) || 'YouTube')} · by ${esc(s.by)}</p>
+      ${s.msg ? `<p class="font-hand text-[color:var(--a3)] text-sm mt-2 leading-snug">“${esc(s.msg)}”</p>` : ''}
+      <div class="flex items-center justify-between mt-3">
+        <button class="heart flex items-center gap-1.5 text-xs text-white/60 hover:text-pink-400 transition-colors">💗 <span>${s.hearts}</span></button>
+        <a href="${s.kind === 'playlist' ? PLIST_URL : 'https://www.youtube.com/watch?v=' + s.vId}" target="_blank" rel="noopener"
+           class="text-xs text-white/40 hover:text-[color:var(--a3)]">open ↗</a>
+      </div>
+    </div>
+  </article>`;
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderWall(){
+  const wall = $('#wall');
+  if(!sugs.length){
+    wall.innerHTML = `<div class="sm:col-span-2 rounded-2xl border border-dashed border-white/15 p-10 text-center text-white/40">
+      <div class="text-4xl mb-3">🪔</div>
+      <p class="font-hand text-lg text-white/60">First garba of the night is yours —</p>
+      <p class="text-xs mt-1">paste a YouTube link on the left and light up the wall.</p>
+    </div>`;
+  } else {
+    wall.innerHTML = sugs.map(cardHTML).join('');
+  }
+  $('#wallCount').textContent = sugs.length ? `· ${sugs.length} pick${sugs.length > 1 ? 's' : ''}` : '';
+  bindCards();
+}
+function bindCards(){
+  $$('#wall .sug-card').forEach(card => {
+    const s = sugs.find(x => x.id === card.dataset.id); if(!s) return;
+    const fab = card.querySelector('.play-fab');
+    fab.onclick = () => {
+      if(s.kind === 'playlist'){
+        sugMode = false; $('#sugPill').classList.add('hidden');
+        tryYt(() => { yt.loadPlaylist({ list: PLIST_ID, listType: 'playlist' }); setTimeout(() => yt.playVideo(), 250); });
+        $('#videoShell').classList.remove('pulse'); void $('#videoShell').offsetWidth; $('#videoShell').classList.add('pulse');
+        $('#playlist').scrollIntoView({ behavior:'smooth', block:'center' });
+        toast('Playing the mega playlist — ghumav! 🌀', '🪘');
+      } else {
+        playVideo(s.vId, true);
+        toast('Now playing: ' + (s.title || 'your pick'), '🎧');
+      }
+    };
+    const heart = card.querySelector('.heart');
+    heart.onclick = () => {
+      s.hearts++; saveSugs();
+      heart.querySelector('span').textContent = s.hearts;
+      heart.classList.remove('pop'); void heart.offsetWidth; heart.classList.add('pop');
+    };
+  });
+}
+renderWall();
+
+const YT_RE = /(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/;
+$('#sugForm').addEventListener('submit', ev => {
+  ev.preventDefault();
+  const link = $('#inLink').value.trim();
+  const m = link.match(YT_RE);
+  if(!m){
+    $('#inLink').classList.add('shake');
+    setTimeout(() => $('#inLink').classList.remove('shake'), 500);
+    toast('Hmm, that doesn\u2019t look like a YouTube link 🤔', '⚠️');
+    return;
+  }
+  const vId = m[1];
+  if(sugs.some(s => s.vId === vId)){
+    toast('That song is already on the wall! 💃'); return;
+  }
+  const s = {
+    id: 's' + Date.now(), kind: 'video', vId,
+    title: 'Your garba pick…', author: '',
+    by: $('#inName').value.trim() || 'A Rangilo Dancer',
+    msg: $('#inMsg').value.trim(),
+    ts: Date.now(), hearts: 0,
+  };
+  sugs.unshift(s); saveSugs(); renderWall();
+  const card = $(`#wall .sug-card[data-id="${s.id}"]`);
+  if(card){ card.classList.add('pulse', 'in'); }
+  const r = $('#sugBtn').getBoundingClientRect();
+  burstAt(r.left + r.width/2, r.top, 110);
+  toast('Tamaru suggestion add thai gayu! ✦ Shu bhent, shu rang!', '🎶');
+  ev.target.reset(); $('#inLink').focus();
+
+  /* fetch real title via noembed */
+  fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + vId))
+    .then(r => r.json())
+    .then(j => {
+      if(j && j.title){
+        s.title = j.title; s.author = j.author_name || '';
+        saveSugs();
+        if(card){
+          card.querySelector('.t-title').textContent = s.title;
+          card.querySelector('.t-by').textContent = (s.author || 'YouTube') + ' · by ' + s.by;
+        }
+      } else { if(card) card.querySelector('.t-title').textContent = 'Garba pick ✦ ' + vId; }
+    })
+    .catch(() => { if(card) card.querySelector('.t-title').textContent = 'Garba pick ✦ ' + vId; });
+});
+</script>
+</body>
+</html>
